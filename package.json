@@ -1,6 +1,7 @@
 {
   "name": "minio-vscode",
   "displayName": "minio-vscode",
+  "icon": "https://autoize.com/wp-content/uploads/2018/08/minio-logo-white.png",
   "description": "",
   "version": "0.0.1",
   "engines": {

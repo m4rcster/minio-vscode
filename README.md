@@ -1,4 +1,4 @@
-# Minio VSCode README
+# MinIO S3 Explorer (VSCODE)
 
 This extension allows to connect with a MinIO S3 bucket to explore, view, edit and create files and folders.
 
@@ -14,8 +14,6 @@ MINIO_BUCKET_NAME=bucket_name
 - Call `Connect to MinIO Bucket defined in .env file`
 - Now a new workspace folder is created that is connected to your MinIO bucket
 - View, Edit, and Create files
-
-\!\[feature X\]\(images/feature-x.png\)
 
 > Tip: folders are not supported by minio, you will need to create a file within the folder for it to persits
 

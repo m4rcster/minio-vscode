@@ -1,9 +1,13 @@
 {
   "name": "minio-vscode",
   "displayName": "minio-vscode",
-  "icon": "https://autoize.com/wp-content/uploads/2018/08/minio-logo-white.png",
   "description": "",
+  "icon": "minio-logo.png",
   "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/m4rcster/minio-vscode.git"
+  },
   "engines": {
     "vscode": "^1.78.0"
   },
@@ -18,11 +22,39 @@
   "contributes": {
     "commands": [
       {
+        "command": "minio-vscode.setMinioParameters",
+        "title": "Set MinIO connection parameters"
+      },
+      {
         "command": "minio-vscode.connectCommand",
-        "title": "Connect to MinIO Bucket defined in .env file"
+        "title": "Connect to MinIO Bucket"
       }
     ],
-    "views": {}
+    "configuration": {
+      "title": "MinIO",
+      "properties": {
+        "minio-vscode.minioEndpoint": {
+          "type": "string",
+          "default": "",
+          "description": "Minio Endpoint URL"
+        },
+        "minio-vscode.minioAccessKey": {
+          "type": "string",
+          "default": "",
+          "description": "Minio Access Key"
+        },
+        "minio-vscode.minioSecretKey": {
+          "type": "string",
+          "default": "",
+          "description": "Minio Secret Key"
+        },
+        "minio-vscode.minioBucketName": {
+          "type": "string",
+          "default": "",
+          "description": "Minio Bucket Name"
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "yarn run compile",
@@ -46,7 +78,6 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "dotenv": "^16.1.4",
     "minio": "^7.1.1"
   }
 }

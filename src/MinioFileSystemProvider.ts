@@ -48,7 +48,19 @@ export class MinioFileSystemProvider implements vscode.FileSystemProvider {
         return this._rename(oldUri, newUri, options);
     }
 
-    private _stat(uri: vscode.Uri): Thenable<vscode.FileStat> {
+    async checkBucket(bucketName: string): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            this.minioClient.bucketExists(bucketName, (err, exists) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(exists);
+                }
+            });
+        });
+    }
+
+    private _stat(uri: vscode.Uri): Promise<vscode.FileStat> {
         const bucketName = uri.authority;
         const objectName = uri.path.substring(1); // Remove the leading slash
 
@@ -145,33 +157,33 @@ export class MinioFileSystemProvider implements vscode.FileSystemProvider {
 
     private async _deleteObject(bucketName: string, objectName: string): Promise<void> {
         try {
-          await this.minioClient.removeObject(bucketName, objectName);
+            await this.minioClient.removeObject(bucketName, objectName);
         } catch (error) {
-          console.error(`Failed to delete object: ${objectName}`, error);
-          throw error;
+            console.error(`Failed to delete object: ${objectName}`, error);
+            throw error;
         }
-      }
-      
-      private async _deleteDirectoryRecursive(bucketName: string, objectName: string): Promise<void> {
+    }
+
+    private async _deleteDirectoryRecursive(bucketName: string, objectName: string): Promise<void> {
         try {
             const objects: any[] = [];
-        
+
             await new Promise<void>((resolve, reject) => {
-              const stream = this.minioClient.listObjectsV2(bucketName, objectName, true);
-        
-              stream.on('data', (obj) => objects.push(obj));
-              stream.on('error', (error) => reject(error));
-              stream.on('end', () => resolve());
+                const stream = this.minioClient.listObjectsV2(bucketName, objectName, true);
+
+                stream.on('data', (obj) => objects.push(obj));
+                stream.on('error', (error) => reject(error));
+                stream.on('end', () => resolve());
             });
-        
+
             const objectNames = objects.map((obj) => obj.name);
-        
+
             await Promise.all(objectNames.map((name) => this._deleteObject(bucketName, name)));
-          } catch (error) {
+        } catch (error) {
             console.error(`Failed to delete directory: ${objectName}`, error);
             throw error;
-          }
-      }
+        }
+    }
 
     private async _rename(oldUri: vscode.Uri, newUri: vscode.Uri, options: { overwrite: boolean; }): Promise<void> {
         const oldBucketName = oldUri.authority;
@@ -181,12 +193,12 @@ export class MinioFileSystemProvider implements vscode.FileSystemProvider {
         try {
             // Copy the object to the new name
             await this.minioClient.copyObject(oldBucketName, newObjectName, `${oldBucketName}/${oldObjectName}`, new CopyConditions());
-        
+
             // Delete the old object
             await this.minioClient.removeObject(oldBucketName, oldObjectName);
-          } catch (error) {
+        } catch (error) {
             console.error(`Failed to rename object: ${oldObjectName} to ${newObjectName}`, error);
             throw error;
-          }
+        }
     }
 }

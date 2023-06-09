@@ -1,10 +1,8 @@
 import * as vscode from 'vscode';
 import * as minio from 'minio';
 import { connectCommand } from './connectCommand';
-import { setMinioParametersInWorkspace } from './connectPrompt';
 
 import { MinioFileSystemProvider } from './MinioFileSystemProvider';
-import { log } from 'console';
 
 export function activate(context: vscode.ExtensionContext) {
 	console.log('Congratulations, your extension "minio-vscode" is now active!');
@@ -13,11 +11,7 @@ export function activate(context: vscode.ExtensionContext) {
 	let bucketName: string | undefined;
 	let minioFileSystemProvider: MinioFileSystemProvider | undefined;
 
-	let connectPromptDisposable = vscode.commands.registerCommand('minio-vscode.setMinioParameters', () => {
-		setMinioParametersInWorkspace();
-	});
 
-	context.subscriptions.push(connectPromptDisposable);
 
 	const connectDisposable = vscode.commands.registerCommand('minio-vscode.connectCommand', async () => {
 		const connectResult = connectCommand();
@@ -52,7 +46,8 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(connectDisposable);
 
-	vscode.commands.executeCommand('minio-vscode.connectCommand');
-}
+	if(vscode.workspace.workspaceFolders?.some((folder) => folder.uri.scheme === 'minio')) {
+		vscode.commands.executeCommand('minio-vscode.connectCommand');
+	}}
 
 export function deactivate() { }

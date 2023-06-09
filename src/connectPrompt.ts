@@ -1,6 +1,45 @@
 import * as vscode from 'vscode';
 
 export async function setMinioParametersInWorkspace() {
+    /* Implementation not used as it's not safe to store credentials in workspace settings */
+    /*
+        //file: extension.ts
+        let connectPromptDisposable = vscode.commands.registerCommand('minio-vscode.setMinioParameters', () => {
+            setMinioParametersInWorkspace();
+        });
+        context.subscriptions.push(connectPromptDisposable);
+        // package.json
+        "commands": [{
+            "command": "minio-vscode.setMinioParameters",
+            "title": "Set MinIO connection parameters"
+            }],
+        "configuration": {
+            "title": "MinIO",
+            "properties": {
+                "minio-vscode.minioEndpoint": {
+                "type": "string",
+                "default": "",
+                "description": "Minio Endpoint URL"
+                },
+                "minio-vscode.minioAccessKey": {
+                "type": "string",
+                "default": "",
+                "description": "Minio Access Key"
+                },
+                "minio-vscode.minioSecretKey": {
+                "type": "string",
+                "default": "",
+                "description": "Minio Secret Key"
+                },
+                "minio-vscode.minioBucketName": {
+                "type": "string",
+                "default": "",
+                "description": "Minio Bucket Name"
+                }
+            }
+        }
+    */
+    /*
     const workspaceConfig = vscode.workspace.getConfiguration();
 
     const existingEndpoint = workspaceConfig.get('minio-vscode.minioEndpoint', '');
@@ -42,10 +81,12 @@ export async function setMinioParametersInWorkspace() {
         workspaceConfig.update('minio-vscode.minioAccessKey', minioAccessKey, vscode.ConfigurationTarget.Workspace);
         workspaceConfig.update('minio-vscode.minioSecretKey', minioSecretKey, vscode.ConfigurationTarget.Workspace);
         workspaceConfig.update('minio-vscode.minioBucketName', minioBucketName, vscode.ConfigurationTarget.Workspace);
+        
 
         vscode.window.showInformationMessage('MinIO parameters saved successfully.');
         vscode.commands.executeCommand('minio-vscode.connectCommand');
     } else {
         vscode.window.showErrorMessage('Please fill in all input fields.');
     }
+    */
 }

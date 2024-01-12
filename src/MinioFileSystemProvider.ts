@@ -90,11 +90,11 @@ export class MinioFileSystemProvider implements vscode.FileSystemProvider {
     private async _readDirectory(uri: vscode.Uri): Promise<[string, vscode.FileType][]> {
         const bucket = uri.authority;
         const prefix = uri.path.substring(1); // Remove the leading slash
-
+        
         return new Promise<[string, vscode.FileType][]>((resolve, reject) => {
             const children: [string, vscode.FileType][] = [];
 
-            const stream = this.minioClient.listObjects(bucket, prefix + '/', false);
+            const stream = this.minioClient.listObjects(bucket, prefix, false);
             stream.on('data', (obj) => {
                 const isDirectory: boolean = obj.prefix ? true : false;
                 const filePath = isDirectory ? obj.prefix.substring(prefix.length) : obj.name.substring(prefix.length);
@@ -106,6 +106,7 @@ export class MinioFileSystemProvider implements vscode.FileSystemProvider {
             stream.on('error', (err) => { reject(err); });
 
             stream.on('end', () => {
+                console.log(children)
                 resolve(children);
             });
         });
